@@ -1,0 +1,152 @@
+import tkinter as tk
+from tkinter import messagebox, simpledialog
+import sqlite3
+from cryptography.fernet import Fernet
+import random
+import string
+import schedule
+import threading
+import time
+
+# Generate or load encryption key
+def load_key():
+    try:
+        with open("key.key", "rb") as key_file:
+            return key_file.read()
+    except FileNotFoundError:
+        key = Fernet.generate_key()
+        with open("key.key", "wb") as key_file:
+            key_file.write(key)
+        return key
+
+encryption_key = load_key()
+cipher_suite = Fernet(encryption_key)
+
+# Database initialization
+def init_db():
+    conn = sqlite3.connect("passwords.db")
+    cursor = conn.cursor()
+    cursor.execute('''CREATE TABLE IF NOT EXISTS credentials (
+                        id INTEGER PRIMARY KEY,
+                        platform TEXT,
+                        username TEXT,
+                        password TEXT,
+                        last_updated TEXT
+                      )''')
+    conn.commit()
+    conn.close()
+
+# Password generation
+def generate_password(length=16):
+    characters = string.ascii_letters + string.digits + string.punctuation
+    return ''.join(random.choice(characters) for _ in range(length))
+
+# Save password to database
+def save_password(platform, username, password):
+    encrypted_password = cipher_suite.encrypt(password.encode())
+    conn = sqlite3.connect("passwords.db")
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO credentials (platform, username, password, last_updated) VALUES (?, ?, ?, datetime('now'))",
+                   (platform, username, encrypted_password))
+    conn.commit()
+    conn.close()
+
+# Retrieve all passwords
+def view_passwords():
+    conn = sqlite3.connect("passwords.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT platform, username, password FROM credentials")
+    rows = cursor.fetchall()
+    conn.close()
+    return [(platform, username, cipher_suite.decrypt(password).decode()) for platform, username, password in rows]
+
+# Update password
+def update_password(platform):
+    conn = sqlite3.connect("passwords.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, username FROM credentials WHERE platform = ?", (platform,))
+    record = cursor.fetchone()
+    if record:
+        new_password = generate_password()
+        encrypted_password = cipher_suite.encrypt(new_password.encode())
+        cursor.execute("UPDATE credentials SET password = ?, last_updated = datetime('now') WHERE id = ?",
+                       (encrypted_password, record[0]))
+        conn.commit()
+        conn.close()
+        return new_password
+    else:
+        conn.close()
+        return None
+
+# Schedule updates
+def schedule_update(platform, interval):
+    schedule.every(interval).hours.do(lambda: update_password(platform))
+
+# Background scheduler thread
+def run_scheduler():
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
+
+# GUI
+class PasswordFlipperApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Password Flipper")
+        self.create_widgets()
+
+    def create_widgets(self):
+        tk.Label(self.root, text="Password Flipper - A NewkxyZ Project", font=("Helvetica", 16)).pack(pady=10)
+
+        self.add_button = tk.Button(self.root, text="Add Password", command=self.add_password)
+        self.add_button.pack(pady=5)
+
+        self.view_button = tk.Button(self.root, text="View Passwords", command=self.view_passwords)
+        self.view_button.pack(pady=5)
+
+        self.update_button = tk.Button(self.root, text="Update Password", command=self.update_password_prompt)
+        self.update_button.pack(pady=5)
+
+        self.schedule_button = tk.Button(self.root, text="Schedule Updates", command=self.schedule_updates)
+        self.schedule_button.pack(pady=5)
+
+    def add_password(self):
+        platform = simpledialog.askstring("Platform", "Enter platform name:")
+        username = simpledialog.askstring("Username", "Enter username:")
+        password = generate_password()
+        save_password(platform, username, password)
+        messagebox.showinfo("Password Saved", f"Password for {platform} saved successfully!")
+
+    def view_passwords(self):
+        passwords = view_passwords()
+        result = "\n".join([f"Platform: {p[0]}, Username: {p[1]}, Password: {p[2]}" for p in passwords])
+        if result:
+            messagebox.showinfo("Stored Passwords", result)
+        else:
+            messagebox.showinfo("Stored Passwords", "No passwords found.")
+
+    def update_password_prompt(self):
+        platform = simpledialog.askstring("Platform", "Enter platform name:")
+        new_password = update_password(platform)
+        if new_password:
+            messagebox.showinfo("Password Updated", f"New password for {platform}: {new_password}")
+        else:
+            messagebox.showerror("Error", f"No record found for platform: {platform}")
+
+    def schedule_updates(self):
+        platform = simpledialog.askstring("Platform", "Enter platform name:")
+        interval = simpledialog.askinteger("Interval", "Enter update interval (hours):")
+        if platform and interval:
+            schedule_update(platform, interval)
+            messagebox.showinfo("Scheduled", f"Password updates for {platform} scheduled every {interval} hours.")
+        else:
+            messagebox.showerror("Error", "Invalid input.")
+
+# Main
+if __name__ == "__main__":
+    init_db()
+    root = tk.Tk()
+    app = PasswordFlipperApp(root)
+    scheduler_thread = threading.Thread(target=run_scheduler, daemon=True)
+    scheduler_thread.start()
+    root.mainloop()
