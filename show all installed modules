@@ -1,0 +1,7 @@
+To show all installed modules in Command Prompt (CMD), 
+PowerShell, and Kali Linux, you can use the following commands for each environment:
+on the first system to get a list of the installed modules in the installed_modules.txt file. Now copy this file over to second system.
+Now use pip to install these modules using:
+
+##      $ pip install -r installed_modules.txt
+                                                                  This will install all modules that were installed on the first system
