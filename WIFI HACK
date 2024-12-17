@@ -1,0 +1,344 @@
+https://raw.githubusercontent.com/esc0rtd3w/wifi-hacker/master/wifi-hacker.sh
+############################################################################
+                                                                #   TO DO LIST BEGIN       #####################################################
+############################################################################
+
+
+# Extend the width of the airodump windows when opening externally
+# Add change options on-the-fly for WPS and other attack modes
+# Add cowpatty support for WPA/WPA2 attacks
+# Set an "ok so far" temp variable to see if all dependencies are available
+# Set default $serverWPA veriable to some value other than blank
+# Add sniffing/wireshark support
+# Add support for airbase-ng
+# Create separate handshake file with an appropriate filename
+# Add "create wordlist" for phone numbers and possibly others. Add option for local
+# Add checks and copy files created by besside to appropriate directories
+# Add convert to .hccap support for ocl-hashcat and other compatible software
+# Get advanced mode working
+# Get help menu working
+# Post-Exploitation Attacks To Add (Probably Scrap 20160514)
+
+# driftnet
+# nmap
+# wifi-honey
+
+
+
+
+
+###############################To get started with this script, you need to follow these steps:###############################
+
+###############################1. **Open a terminal on your Linux machine.**
+
+###############################2. **Create a new script file.** You can use any text editor or command-line tool to create the file. For example, using ###############################`nano`:
+###############################
+###############################   ```bash
+###############################   nano network_monitor.sh
+###############################  ```
+###############################
+###############################3. **Copy and paste the provided script into the file.** Ensure you paste the entire script correctly.
+###############################
+###############################4. **Save the script and exit the editor.** If you are using `nano`, you can save and exit by pressing `CTRL + X`, then ###############################`Y`, and then `Enter`.
+
+###############################5. **Make the script executable.** Run the following command to make the script executable:
+
+###############################   ```bash
+###############################   chmod +x network_monitor.sh
+###############################   ```
+###############################
+###############################6. **Run the script with the desired option.** For example, to start Wireshark sniffing on a specific interface, you would ###############################run:
+###############################
+###############################   ```bash
+###############################   ./network_monitor.sh --sniff wlan0
+###############################   ```
+###############################   Replace `wlan0` with the appropriate network interface you want to sniff.
+###############################
+###############################Here are some example commands you can run based on the script options:
+
+- **Start Wireshark sniffing:**
+
+  ```bash
+  ./network_monitor.sh --sniff wlan0
+  ```
+
+- **Start airbase-ng:**
+
+  ```bash
+  ./network_monitor.sh --airbase wlan0
+  ```
+
+- **Create a handshake file:**
+
+  ```bash
+  ./network_monitor.sh --handshake
+  ```
+
+- **Create a wordlist:**
+
+  ```bash
+  ./network_monitor.sh --wordlist
+  ```
+
+- **Convert a .cap file to .hccap:**
+
+  ```bash
+  ./network_monitor.sh --convert path/to/file.cap
+  ```
+
+- **Enter advanced mode:**
+
+  ```bash
+  ./network_monitor.sh --advanced
+  ```
+
+- **Display the help menu:**
+
+  ```bash
+  ./network_monitor.sh --help
+  ```
+
+Ensure you have the required tools installed (`curl`, `wget`, `nmap`, `wireshark`, `hydra`, `airbase-ng`, `besside-ng`, `hashcat-utils`) before running the script. If any of these tools are missing, you can install them using your package manager (e.g., `apt` for Debian-based systems). For example:
+
+```bash
+sudo apt update
+sudo apt install curl wget nmap wireshark hydra aircrack-ng hashcat-utils
+```
+
+To set up a temporary variable to check if all dependencies are available and
+ to set a default value for a `$serverWPA` variable in a shell script, you can follow the steps below:
+
+### Shell Script Example
+
+```bash
+#!/bin/bash
+
+# Initialize the "ok_so_far" variable
+ok_so_far=true
+
+# Function to check if a command exists
+check_command() {
+    if ! command -v "$1" &> /dev/null; then
+        echo "Error: $1 is not installed."
+        ok_so_far=false
+    fi
+}
+
+# List of required commands
+required_commands=("curl" "wget" "nmap" "wireshark" "hydra")
+
+# Check each required command
+for cmd in "${required_commands[@]}"; do
+    check_command "$cmd"
+done
+
+# Set default value for $serverWPA variable
+serverWPA="default_value"
+
+# Output the status of dependencies check
+if [ "$ok_so_far" = true ]; then
+    echo "All dependencies are available."
+else
+    echo "Some dependencies are missing."
+fi
+
+# Continue with the rest of your script
+# ...
+
+```
+
+### Explanation
+
+1. **Initialize `ok_so_far`:**
+   ```bash
+   ok_so_far=true
+   ```
+   This variable will keep track of whether all dependencies are available.
+
+2. **Function to Check Command Availability:**
+   ```bash
+   check_command() {
+       if ! command -v "$1" &> /dev/null; then
+           echo "Error: $1 is not installed."
+           ok_so_far=false
+       fi
+   }
+   ```
+   The `check_command` function checks if a command exists on the system. If a command is not found, it sets `ok_so_far` to `false`.
+
+3. **List of Required Commands:**
+   ```bash
+   required_commands=("curl" "wget" "nmap" "wireshark" "hydra")
+   ```
+   This array contains the names of the commands that your script depends on.
+
+4. **Check Each Required Command:**
+   ```bash
+   for cmd in "${required_commands[@]}"; do
+       check_command "$cmd"
+   done
+   ```
+   This loop iterates through the list of required commands and checks each one using the `check_command` function.
+
+5. **Set Default Value for `$serverWPA`:**
+   ```bash
+   serverWPA="default_value"
+   ```
+   This line sets a default value for the `$serverWPA` variable.
+
+6. **Output the Status of Dependencies Check:**
+   ```bash
+   if [ "$ok_so_far" = true ]; then
+       echo "All dependencies are available."
+   else
+       echo "Some dependencies are missing."
+   fi
+   ```
+   This block outputs whether all dependencies are available based on the value of `ok_so_far`.
+
+To build a comprehensive shell script that fulfills all the listed requirements, we can create a script that incorporates the following features:
+
+1. **Setting Default Variables**
+2. **Adding Support for Wireshark, airbase-ng, and other tools**
+3. **Creating Separate Handshake Files**
+4. **Generating Wordlists**
+5. **Checking and Copying Files Created by Besside**
+6. **Converting to .hccap for oclHashcat**
+7. **Implementing Advanced Mode**
+8. **Creating a Help Menu**
+
+Here's an example shell script:
+
+```bash
+#!/bin/bash
+
+# Initialize the "ok_so_far" variable
+ok_so_far=true
+
+# Function to check if a command exists
+check_command() {
+    if ! command -v "$1" &> /dev/null; then
+        echo "Error: $1 is not installed."
+        ok_so_far=false
+    fi
+}
+
+# List of required commands
+required_commands=("curl" "wget" "nmap" "wireshark" "hydra" "airbase-ng" "besside-ng" "hashcat-utils")
+
+# Check each required command
+for cmd in "${required_commands[@]}"; do
+    check_command "$cmd"
+done
+
+# Set default value for $serverWPA variable
+serverWPA="default_value"
+
+# Output the status of dependencies check
+if [ "$ok_so_far" = true ]; then
+    echo "All dependencies are available."
+else
+    echo "Some dependencies are missing."
+    exit 1
+fi
+
+# Function to start Wireshark sniffing
+start_sniffing() {
+    echo "Starting Wireshark sniffing on interface $1..."
+    sudo wireshark -i "$1" &
+}
+
+# Function to start airbase-ng
+start_airbase_ng() {
+    echo "Starting airbase-ng on interface $1..."
+    sudo airbase-ng -e "FreeWiFi" "$1" &
+}
+
+# Function to create a separate handshake file
+create_handshake_file() {
+    local handshake_dir="handshakes"
+    mkdir -p "$handshake_dir"
+    local timestamp=$(date +%Y%m%d%H%M%S)
+    local handshake_file="$handshake_dir/handshake_$timestamp.cap"
+    echo "Saving handshake to $handshake_file..."
+    sudo cp /path/to/besside-ng/handshake.cap "$handshake_file"
+}
+
+# Function to create a wordlist from phone numbers
+create_wordlist() {
+    echo "Creating wordlist..."
+    for i in {0000000..9999999}; do
+        echo "555$i" >> wordlist.txt
+    done
+    echo "Wordlist created at wordlist.txt"
+}
+
+# Function to convert .cap to .hccap for hashcat
+convert_to_hccap() {
+    local input_file="$1"
+    local output_file="${input_file%.cap}.hccap"
+    echo "Converting $input_file to $output_file..."
+    cap2hccapx "$input_file" "$output_file"
+}
+
+# Advanced mode function
+advanced_mode() {
+    echo "Entering advanced mode..."
+    # Add advanced mode functionality here
+}
+
+# Help menu function
+help_menu() {
+    echo "Usage: $0 [options]"
+    echo "Options:"
+    echo "  --sniff <interface>     Start Wireshark sniffing on the specified interface"
+    echo "  --airbase <interface>   Start airbase-ng on the specified interface"
+    echo "  --handshake             Create a separate handshake file"
+    echo "  --wordlist              Create a wordlist from phone numbers"
+    echo "  --convert <file>        Convert .cap file to .hccap for hashcat"
+    echo "  --advanced              Enter advanced mode"
+    echo "  --help                  Display this help menu"
+}
+
+# Main script logic
+case "$1" in
+    --sniff)
+        start_sniffing "$2"
+        ;;
+    --airbase)
+        start_airbase_ng "$2"
+        ;;
+    --handshake)
+        create_handshake_file
+        ;;
+    --wordlist)
+        create_wordlist
+        ;;
+    --convert)
+        convert_to_hccap "$2"
+        ;;
+    --advanced)
+        advanced_mode
+        ;;
+    --help)
+        help_menu
+        ;;
+    *)
+        echo "Invalid option. Use --help to see the available options."
+        ;;
+esac
+
+```
+
+### Explanation
+
+1. **Dependency Check:** Ensures that all required commands are installed before proceeding.
+2. **Wireshark Sniffing:** Starts Wireshark on the specified interface.
+3. **airbase-ng:** Starts airbase-ng with a specified SSID.
+4. **Handshake File Creation:** Creates a timestamped handshake file.
+5. **Wordlist Generation:** Creates a wordlist with phone numbers.
+6. **File Conversion:** Converts .cap files to .hccap for hashcat.
+7. **Advanced Mode:** Placeholder for advanced functionality.
+8. **Help Menu:** Provides usage information.
+
+This script is modular and can be extended with additional functionality as needed. Be sure to replace `/path/to/besside-ng/handshake.cap` with the actual path to the handshake file created by besside-ng.
