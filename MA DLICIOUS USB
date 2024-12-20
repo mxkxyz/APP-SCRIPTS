@@ -1,0 +1,141 @@
+ detection and prevention tool for malicious USB-C cables, you can write Python scripts using libraries like pyserial for USB communication, and integrate hardware like an Arduino or Raspberry Pi for further control. Below is an outline and example code for creating a detection system and data blocker.
+
+
+---
+
+1. USB Cable Malicious Detection
+
+identify suspicious activity by monitoring unusual data transfers when a USB device is connected.
+
+        ## 
+
+import serial
+import time
+
+def scan_usb_ports():
+    """List all available USB ports."""
+    from serial.tools import list_ports
+    ports = list_ports.comports()
+    return [port.device for port in ports]
+
+def detect_suspicious_activity(port):
+    """Monitor USB data for unexpected behavior."""
+    try:
+        with serial.Serial(port, baudrate=9600, timeout=1) as ser:
+            print(f"Monitoring {port} for data...")
+            while True:
+                data = ser.readline().decode('utf-8', errors='ignore').strip()
+                if data:
+                    print(f"Data detected: {data}")
+                    if "unexpected" in data:  # Replace with specific flags
+                        print("Suspicious activity detected!")
+                        break
+    except Exception as e:
+        print(f"Error: {e}")
+
+if __name__ == "__main__":
+    ports = scan_usb_ports()
+    if ports:
+        print("Available USB ports:", ports)
+        detect_suspicious_activity(ports[0])  # Test the first port
+    else:
+        print("No USB devices detected.")
+
+
+---
+
+2. Data Blocker Implementation
+
+We can block all data transmissions, allowing only power flow, using a hardware-based "data blocker". A Python script can control a relay or similar hardware connected to an Arduino/Raspberry Pi.
+
+Code Example for Arduino:
+
+Upload this sketch to your Arduino:
+
+void setup() {
+  pinMode(7, OUTPUT); // Assume pin 7 controls data lines
+  digitalWrite(7, HIGH); // Default to blocking data
+}
+
+void loop() {
+  // Toggle data blocking with a signal from Python
+}
+
+Python Script to Control the Data Blocker:
+
+import serial
+
+def control_data_blocker(block=True):
+    """Enable or disable the data blocker via Arduino."""
+    try:
+        with serial.Serial('/dev/ttyUSB0', 9600, timeout=1) as arduino:
+            signal = b'1' if block else b'0'  # Send '1' to block, '0' to allow
+            arduino.write(signal)
+            print(f"Data blocker {'enabled' if block else 'disabled'}.")
+    except Exception as e:
+        print(f"Error: {e}")
+
+if __name__ == "__main__":
+    control_data_blocker(block=True)  # Block data
+
+
+---
+
+3. Detection Using O.MG Cable Detector
+
+If you have an O.MG detector or similar hardware, Python can interface with it to automate checks.
+
+Integration Example:
+
+def run_omg_detector():
+    """Communicate with the O.MG detector via serial."""
+    try:
+        with serial.Serial('/dev/ttyUSB0', baudrate=115200, timeout=1) as omg:
+            omg.write(b'CHECK')  # Example command to trigger detection
+            response = omg.readline().decode('utf-8').strip()
+            print(f"Detector Response: {response}")
+    except Exception as e:
+        print(f"Error: {e}")
+
+if __name__ == "__main__":
+    run_omg_detector()
+
+
+---
+
+4. Enhance with Logging and Alerts
+
+You can log activities and send real-time alerts via email or webhooks (e.g., Slack or Discord) using Python libraries like smtplib or requests.
+
+Logging Example:
+
+import logging
+
+logging.basicConfig(filename="usb_detection.log", level=logging.INFO)
+
+def log_event(event):
+    """Log detection events."""
+    logging.info(event)
+
+log_event("Suspicious USB activity detected.")
+
+Sending Alerts Example:
+
+import requests
+
+def send_alert(message):
+    """Send an alert to a Discord or Slack webhook."""
+    webhook_url = "YOUR_WEBHOOK_URL"
+    payload = {"content": message}
+    requests.post(webhook_url, json=payload)
+
+send_alert("Suspicious USB activity detected!")
+
+
+---
+
+5. Complete System
+
+You can combine these scripts into a single, modular tool to scan for malicious USB cables, block data, and alert the user.
+
+
