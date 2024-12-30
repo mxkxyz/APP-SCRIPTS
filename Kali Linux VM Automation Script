@@ -1,0 +1,108 @@
+Checks VMware Installation: Ensures vmrun is installed and accessible.
+Validates .vmx File Path: Confirms the provided path points to a valid VMware configuration file.
+Starts the Virtual Machine: Automates starting the VM using vmrun.
+Installs VMware Tools: Optionally installs VMware Tools for better performance and functionality.
+Updates Kali Linux: Optionally updates Kali Linux packages via apt.
+Usage Instructions:
+Save this script as kali_vm_setup.py.
+Run it from the command prompt or terminal:
+
+python kali_vm_setup.py
+
+Follow the prompts to enter the .vmx file path and choose optional actions.
+Notes:
+Ensure vmrun is in your system's PATH. If not, add the VMware Workstation directory to your PATH.
+Run the script as an administrator if permissions are required.
+Replace sudo with elevated privileges if running on Windows.
+
+##
+
+import os
+import subprocess
+import sys
+
+def check_vmware():
+    """Check if VMware and vmrun are installed and accessible."""
+    print("Checking VMware installation...")
+    try:
+        result = subprocess.run(["vmrun", "-T", "ws", "list"], capture_output=True, text=True)
+        if result.returncode != 0:
+            raise Exception("VMware not found or not configured in PATH.")
+        print("VMware installation verified.")
+    except Exception as e:
+        print(f"Error: {e}")
+        input("Please install VMware Workstation and ensure 'vmrun' is in your system PATH. Press Enter to exit.")
+        sys.exit(1)
+
+def validate_vmx_path(vmx_path):
+    """Validate the .vmx file path."""
+    if not os.path.isfile(vmx_path) or not vmx_path.endswith(".vmx"):
+        print("Invalid path. Please ensure it points to a valid .vmx file.")
+        input("Press Enter to exit.")
+        sys.exit(1)
+
+def start_vm(vmx_path):
+    """Start the virtual machine."""
+    print(f"Starting the virtual machine: {vmx_path}")
+    try:
+        subprocess.run(["vmrun", "-T", "ws", "start", vmx_path], check=True)
+        print("Virtual machine started successfully.")
+    except subprocess.CalledProcessError as e:
+        print(f"Failed to start the VM: {e}")
+        input("Press Enter to exit.")
+        sys.exit(1)
+
+def install_vmware_tools(vmx_path):
+    """Install VMware Tools on the virtual machine."""
+    print("Installing VMware Tools...")
+    try:
+        subprocess.run(["vmrun", "-T", "ws", "installTools", vmx_path], check=True)
+        print("VMware Tools installation initiated.")
+    except subprocess.CalledProcessError as e:
+        print(f"Failed to install VMware Tools: {e}")
+        input("Press Enter to exit.")
+        sys.exit(1)
+
+def update_kali_linux():
+    """Run updates on the Kali Linux system."""
+    print("Updating Kali Linux packages...")
+    try:
+        subprocess.run(["sudo", "apt", "update"], check=True)
+        subprocess.run(["sudo", "apt", "upgrade", "-y"], check=True)
+        print("Kali Linux updated successfully.")
+    except subprocess.CalledProcessError as e:
+        print(f"Failed to update Kali Linux: {e}")
+        input("Press Enter to exit.")
+        sys.exit(1)
+
+def main():
+    try:
+        print("Welcome to the Kali Linux VM Automation Script!")
+        print("This script will help you configure and run your Kali Linux virtual machine.")
+
+        vmx_path = input("Enter the full path to your Kali Linux .vmx file: ").strip()
+
+        # Step 1: Check prerequisites
+        check_vmware()
+        validate_vmx_path(vmx_path)
+
+        # Step 2: Start the VM
+        start_vm(vmx_path)
+
+        # Step 3: Install VMware Tools (optional)
+        install_tools = input("Do you want to install VMware Tools? (yes/no): ").strip().lower()
+        if install_tools == "yes":
+            install_vmware_tools(vmx_path)
+
+        # Step 4: Update Kali Linux (optional)
+        update_kali = input("Do you want to update Kali Linux packages? (yes/no): ").strip().lower()
+        if update_kali == "yes":
+            update_kali_linux()
+
+        print("All steps completed successfully!")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        input("Press Enter to exit.")
+
+if __name__ == "__main__":
+    main()
