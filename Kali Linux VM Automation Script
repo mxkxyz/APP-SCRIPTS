@@ -1,0 +1,79 @@
+Checks VMware Installation: Ensures vmrun is installed and accessible.
+Validates .vmx File Path: Confirms the provided path points to a valid VMware configuration file.
+Starts the Virtual Machine: Automates starting the VM using vmrun.
+Installs VMware Tools: Optionally installs VMware Tools for better performance and functionality.
+Updates Kali Linux: Optionally updates Kali Linux packages via apt.
+Usage Instructions:
+Save this script as kali_vm_setup.py.
+Run it from the command prompt or terminal:
+
+python kali_vm_setup.py
+
+Follow the prompts to enter the .vmx file path and choose optional actions.
+Notes:
+Ensure vmrun is in your system's PATH. If not, add the VMware Workstation directory to your PATH.
+Run the script as an administrator if permissions are required.
+Replace sudo with elevated privileges if running on Windows.
+
+import os
+import subprocess
+import sys
+
+def check_vmware():
+    """
+    Check if VMware Workstation or Player is installed and 'vmrun' is accessible.
+    """
+    try:
+        subprocess.run(["vmrun", "-T", "ws", "list"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
+        print("VMware installation found and accessible.")
+        return True
+    except FileNotFoundError:
+        print("Error: 'vmrun' not found. Please install VMware Workstation or Player and add it to your system PATH.")
+    except subprocess.CalledProcessError as e:
+        print(f"VMware is installed but returned an error: {e}")
+    return False
+
+def validate_vmx_path(vmx_path):
+    """
+    Validate the provided path to the .vmx file.
+    """
+    if os.path.isfile(vmx_path) and vmx_path.endswith(".vmx"):
+        print("VMX file path validated.")
+        return True
+    else:
+        print("Error: The provided path is not a valid .vmx file.")
+        return False
+
+def start_vm(vmx_path):
+    """
+    Start the virtual machine using 'vmrun'.
+    """
+    try:
+        print("Starting the virtual machine...")
+        result = subprocess.run(["vmrun", "-T", "ws", "start", vmx_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        if result.returncode == 0:
+            print("Virtual machine started successfully!")
+        else:
+            print("Failed to start the virtual machine. Details:")
+            print(result.stderr)
+    except Exception as e:
+        print(f"An unexpected error occurred while starting the VM: {e}")
+
+def main():
+    print("Welcome to the Kali Linux VM Automation Script!")
+    print("This script will help you configure and run your Kali Linux virtual machine.")
+    
+    vmx_path = input("Enter the full path to your Kali Linux .vmx file: ").strip()
+    
+    if not validate_vmx_path(vmx_path):
+        input("Press Enter to exit.")
+        sys.exit(1)
+    
+    if not check_vmware():
+        input("Press Enter to exit.")
+        sys.exit(1)
+    
+    start_vm(vmx_path)
+
+if __name__ == "__main__":
+    main()

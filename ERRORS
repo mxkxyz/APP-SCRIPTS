@@ -1,0 +1,40 @@
+The error indicates that the script cannot locate the `vmrun` command, which is part of VMware's CLI tools. This typically happens when VMware Workstation or VMware Player is not installed, 
+or its executable directory is not added to your system's PATH.
+
+### Steps to Resolve the Issue
+
+1. **Verify VMware Installation**:
+   - Ensure that VMware Workstation or VMware Player is installed on your system. If not, download and install it from the official VMware website: [VMware Workstation Player](https://www.vmware.com/products/workstation-player.html).
+
+2. **Locate `vmrun.exe`**:
+   - By default, `vmrun.exe` is located in the installation directory of VMware, typically:
+     - **Windows**: `C:\Program Files (x86)\VMware\VMware Workstation\`
+     - **Linux**: `/usr/bin/vmrun`
+
+3. **Add VMware to PATH**:
+   - Add the directory containing `vmrun.exe` to your system's PATH environment variable:
+     - **Windows**:
+       1. Open **System Properties** (Win + Pause/Break → Advanced System Settings).
+       2. Click **Environment Variables**.
+       3. Under **System Variables**, find `Path` and click **Edit**.
+       4. Add the directory path to `vmrun.exe` (e.g., `C:\Program Files (x86)\VMware\VMware Workstation\`).
+       5. Click **OK** to save changes.
+     - **Linux**:
+       Add the directory to your shell's PATH variable in `.bashrc` or `.zshrc`.
+
+4. **Test `vmrun` Command**:
+   - Open a terminal or command prompt and type:
+     ```bash
+     vmrun -T ws list
+     ```
+   - This should list all running virtual machines if VMware is correctly installed and configured.
+
+5. **Rerun the Script**:
+   - After ensuring `vmrun` is accessible, rerun the Python script. It should now proceed without errors.
+
+### Additional Debugging:
+If the issue persists:
+- Double-check the path to `vmrun.exe`.
+- Reinstall VMware Workstation or Player to ensure all components are correctly installed.
+
+NEWKXYZ MYKXYZ 
