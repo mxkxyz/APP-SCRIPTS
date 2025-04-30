@@ -50,7 +50,7 @@ Below is a detailed description of each script, its purpose, and how it works:
 
 | **Script Name**       | **Description**                                                                 | **Dependencies**            |
 |------------------------|-------------------------------------------------------------------------------|-----------------------------|
-| `malwarehunter.sh` |— built to search and alert any malware , it acts fast and logs clean. it uses `jq`, `curl`, and `clamscan` (optional) installed for full functionality.
+| `malwarehunter.sh` |— built to search and alert any malware , it acts fast and logs clean. it uses `jq`, `curl`, and `clamscan` (optional) installed for full functionality. |`jq`, `curl`, `clamscan` |
 | `rife_frequency.py`    | A GUI application that plays specific Rife healing frequencies. It uses `Tkinter` for the interface, `Pygame` for audio playback, and `NumPy` for generating sine waves. Frequencies include options for relaxation, DNA repair, pain relief, and more. | `pygame`, `tkinter`, `numpy`|
 | `data_processor.py`    | Processes and analyzes large datasets, including CSV and Excel files. Includes functions for cleaning, summarizing, and visualizing data. Useful for data science and analysis projects. | `pandas`, `numpy`, `matplotlib` |
 | `game_simulator.py`    | A simple game or simulation using `Pygame`. It showcases basic game mechanics, animations, and user interactions. Ideal for learning game development concepts. | `pygame`                    |
@@ -89,9 +89,16 @@ If you have ideas to improve these scripts or want to add your own:
 
 ## 📧 **Contact Me**  
 If you have any questions, suggestions, or feedback, feel free to reach out:  
-- **Email**: [KXYZNEW@GMAIL.COM](mailto:KXYZNEW@GMAIL.COM) // [JUCCNO@GMAIL.COM](mailto:JUCCNO@GMAIL.COM)  
-- **GitHub**: [mxkxyz](https://github.com/mxkxyz)  
+- **Email**: [KXYZNEW@GMAIL.COM](mailto:KXYZNEW@GMAIL.COM) // notsureCsaw@gmail.com 
+- **GitHub**: [mxkxyz](https://github.com/mxkxyz)
+- **YouTube**: [KEYZZ NEWW] - (https://www.youtube.com/@KEYZZNEWW).
 
 ---
 
-⭐ **If you find this repository helpful or inspiring, don’t forget to star it!** ⭐  
+ 
+📣 Shoutout
+Made by mxkxyz, somewhere in NewZealand
+⭐ **If you find this repository helpful or
+inspiring, don’t forget to star it!** ⭐ 
+
+“Built because no one else was watching my back. Now, it watches yours.”
