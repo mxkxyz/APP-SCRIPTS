@@ -50,6 +50,7 @@ Below is a detailed description of each script, its purpose, and how it works:
 
 | **Script Name**       | **Description**                                                                 | **Dependencies**            |
 |------------------------|-------------------------------------------------------------------------------|-----------------------------|
+| `malwarehunter.sh` |— built to search and alert any malware , it acts fast and logs clean. it uses `jq`, `curl`, and `clamscan` (optional) installed for full functionality.
 | `rife_frequency.py`    | A GUI application that plays specific Rife healing frequencies. It uses `Tkinter` for the interface, `Pygame` for audio playback, and `NumPy` for generating sine waves. Frequencies include options for relaxation, DNA repair, pain relief, and more. | `pygame`, `tkinter`, `numpy`|
 | `data_processor.py`    | Processes and analyzes large datasets, including CSV and Excel files. Includes functions for cleaning, summarizing, and visualizing data. Useful for data science and analysis projects. | `pandas`, `numpy`, `matplotlib` |
 | `game_simulator.py`    | A simple game or simulation using `Pygame`. It showcases basic game mechanics, animations, and user interactions. Ideal for learning game development concepts. | `pygame`                    |
@@ -58,7 +59,7 @@ Below is a detailed description of each script, its purpose, and how it works:
 | `audio_player.py`      | A lightweight audio player for playing `.wav` or `.mp3` files. Features include play, pause, and stop functionalities. | `pygame`                    |
 | `image_resizer.py`     | Resizes and optimizes images for different purposes. It’s useful for photographers, web developers, and designers. | `Pillow`                    |
 | `web_scraper.py`       | Scrapes data from websites using `BeautifulSoup` and `requests`. Ideal for gathering information, automating research, or extracting specific data. | `beautifulsoup4`, `requests`|
-| `password_generator.py`| Generates strong, random passwords based on user preferences for length and complexity. | `random`, `string`          | If you’re tired of bloated GUI tools, try malwarehunter — built to act fast and log clean.
+| `password_generator.py`| Generates strong, random passwords based on user preferences for length and complexity. | `random`, `string`          |
 
 ---
 
