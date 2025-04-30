@@ -96,8 +96,10 @@ If you have any questions, suggestions, or feedback, feel free to reach out:
 ---
 
  
-📣 Shoutout
+**📣 Shoutout**
+
 Made by mxkxyz, somewhere in NewZealand
+
 ⭐ **If you find this repository helpful or
 inspiring, don’t forget to star it!** ⭐ 
 
