@@ -1,11 +1,17 @@
-# 🐍 **My Python Scripts Collection**  
+# 🐍 **Some of my Script Collection**  
 
-Welcome to my repository! This is a collection of Python scripts that I have created over time. Each script reflects my journey through coding, problem-solving, and creative exploration. Whether you're here to explore, learn, or contribute, I hope you find these scripts valuable and insightful.  
+Welcome all to my repository!
+   ## ⚔️ Built by mxkxyz
+
+
+🧪 Fork it, test it, break it — then shout out [@mxkxyz](https://github.com/mxkxyz)
+
+ This is a collection of some scripts that I have created over time. Each script reflects my journey through coding, problem-solving, and creative exploration. Whether you're here to explore, learn, or contribute, I hope you find these scripts valuable and insightful.  
 
 ---
 
 ## 📁 **Repository Overview**  
-This repository contains a variety of Python scripts for different use cases, including utilities, games, GUI applications, and more. Each script is crafted to solve a problem, demonstrate a concept, or simply explore the possibilities of Python programming.
+This repository contains a variety of Python scripts for different use cases, including utilities, malware detection, GUI applications, and more. Each script is crafted to solve a problem, demonstrate a concept, or simply explore the possibilities of programming.
 
 ---
 
@@ -52,9 +58,7 @@ Below is a detailed description of each script, its purpose, and how it works:
 | `audio_player.py`      | A lightweight audio player for playing `.wav` or `.mp3` files. Features include play, pause, and stop functionalities. | `pygame`                    |
 | `image_resizer.py`     | Resizes and optimizes images for different purposes. It’s useful for photographers, web developers, and designers. | `Pillow`                    |
 | `web_scraper.py`       | Scrapes data from websites using `BeautifulSoup` and `requests`. Ideal for gathering information, automating research, or extracting specific data. | `beautifulsoup4`, `requests`|
-| `password_generator.py`| Generates strong, random passwords based on user preferences for length and complexity. | `random`, `string`          |
-
-*(Add more descriptions as you include additional scripts.)*
+| `password_generator.py`| Generates strong, random passwords based on user preferences for length and complexity. | `random`, `string`          | If you’re tired of bloated GUI tools, try malwarehunter — built to act fast and log clean.
 
 ---
 
