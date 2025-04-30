@@ -1,0 +1,56 @@
+import pygame
+import os
+import json
+from pygame.locals import *
+from pygame.examples.aliens import main as aliens_main
+
+# Path for storing high scores
+HIGH_SCORE_FILE = os.path.expanduser("~/.pygame_aliens_scores.json")
+
+# Load high score from file
+def load_high_score():
+    if os.path.exists(HIGH_SCORE_FILE):
+        with open(HIGH_SCORE_FILE, 'r') as f:
+            return json.load(f).get("high_score", 0)
+    return 0
+
+# Save high score to file
+def save_high_score(score):
+    with open(HIGH_SCORE_FILE, 'w') as f:
+        json.dump({"high_score": score}, f)
+
+# Inject score tracking into the game
+class ScoreTrackingAliens:
+    def __init__(self):
+        self.score = 0
+        self.high_score = load_high_score()
+        pygame.time.set_timer(USEREVENT + 1, 1000)  # simulate score increase every second
+
+    def run(self):
+        pygame.init()
+        screen = pygame.display.set_mode((640, 480))
+        pygame.display.set_caption("Aliens with Score Tracker")
+
+        running = True
+        while running:
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    running = False
+                elif event.type == USEREVENT + 1:
+                    self.score += 10
+                    print(f"Score: {self.score}")
+
+            screen.fill((0, 0, 0))
+            pygame.display.flip()
+
+        if self.score > self.high_score:
+            print(f"New high score: {self.score} (Old: {self.high_score})")
+            save_high_score(self.score)
+        else:
+            print(f"Your score: {self.score} | High score: {self.high_score}")
+
+        pygame.quit()
+
+
+if __name__ == '__main__':
+    ScoreTrackingAliens().run()
